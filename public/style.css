@@ -242,28 +242,37 @@ header p {
   color: white;
 }
 
-input[type="range"] {
+.voice-setting-input {
   flex: 1;
   min-width: 0;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+  padding: 8px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.voice-setting-input:focus {
+  border-color: #ff6b35;
   outline: none;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
+.voice-setting-input::-webkit-inner-spin-button,
+.voice-setting-input::-webkit-outer-spin-button {
+  opacity: 1;
   height: 20px;
-  background: #ff6b35;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-right: 4px;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
+.voice-setting-input::-webkit-inner-spin-button:hover,
+.voice-setting-input::-webkit-outer-spin-button:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 span[id$="Value"] {
@@ -387,7 +396,7 @@ span[id$="Value"] {
     flex-shrink: 1;
   }
 
-  input[type="range"] {
+  .voice-setting-input {
     width: 100%;
     min-width: 0;
     flex-shrink: 1;
