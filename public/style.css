@@ -15,6 +15,8 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  overflow-x: hidden;
+  word-wrap: break-word;
 }
 
 header {
@@ -206,6 +208,8 @@ header p {
   align-items: center;
   margin-bottom: 15px;
   gap: 15px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .control-group label {
@@ -217,6 +221,7 @@ header p {
 
 #voiceSelect {
   flex: 1;
+  min-width: 0;
   padding: 8px 12px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
@@ -239,6 +244,7 @@ header p {
 
 input[type="range"] {
   flex: 1;
+  min-width: 0;
   height: 6px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
@@ -349,6 +355,7 @@ span[id$="Value"] {
   .container {
     padding: 10px;
     max-width: 100%;
+    overflow-x: hidden;
   }
 
   header h1 {
@@ -358,25 +365,32 @@ span[id$="Value"] {
   .voice-controls {
     padding: 15px;
     margin-bottom: 15px;
+    overflow: hidden;
   }
 
   .control-group {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
+    min-width: 0;
   }
 
   .control-group label {
     min-width: auto;
     text-align: center;
+    flex-shrink: 0;
   }
 
   #voiceSelect {
     width: 100%;
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   input[type="range"] {
     width: 100%;
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   .question-buttons {
