@@ -1,10 +1,14 @@
 const express = require("express")
 const cors = require("cors")
+const rateLimit = require("express-rate-limit")
 const { GoogleGenerativeAI } = require("@google/generative-ai")
 require("dotenv").config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+// Vercel / reverse proxies: use X-Forwarded-For for rate-limit keys
+app.set("trust proxy", 1)
 
 app.use(cors())
 app.use(express.json())
@@ -13,6 +17,18 @@ app.use(express.static("public"))
 // Initialize multiple Gemini instances
 const gemini1 = new GoogleGenerativeAI(process.env.GEMINI_API_KEY1)
 const gemini2 = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2)
+
+const GEMINI_MODEL = "gemini-flash-lite-latest"
+
+const chatRateLimit = rateLimit({
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+  max: Number(process.env.RATE_LIMIT_MAX) || 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Too many messages from this address. Please try again in a few minutes.",
+  },
+})
 
 // Optimized system prompt for Flash models
 const SYSTEM_PROMPT = `You are Adil, a Computer Science graduate from Methodist College (CGPA: 8.73) working as a Programmer Analyst Trainee at Cognizant. You're passionate about problem-solving, debugging, and building innovative software solutions. Your superpower is obsessive error-solving - you sit until you find the issue. You're flexible like a jack of all trades. You want to grow in Machine Learning, teamwork, and communication. People might think you're judgmental based on appearance, but you're actually chill. You push boundaries by putting yourself where you're the least experienced. You have experience with Python, React, Flask, AWS, and various ML libraries. Respond semi-formally and keep it short (humanly, relevantly and try not to answer more than prompted) and a slight hint of casualness,SlightlyIndian style typed english), 2-3 sentences max, dont act like a coding assistant.`
@@ -37,7 +53,7 @@ async function tryGemini(message, apiKey = 1) {
   try {
     const genAI = apiKey === 1 ? gemini1 : gemini2
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-lite",
+      model: GEMINI_MODEL,
       generationConfig: { temperature: 0.7, topP: 0.8, maxOutputTokens: 200 },
     })
 
@@ -53,7 +69,7 @@ async function tryGemini(message, apiKey = 1) {
 }
 
 // Main chat endpoint with multiple Gemini API keys
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", chatRateLimit, async (req, res) => {
   try {
     const { message } = req.body
 
