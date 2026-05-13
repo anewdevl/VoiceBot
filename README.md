@@ -1,190 +1,125 @@
-# 🧠 Personal Voice Bot with Gemini AI
+# Personal Voice Bot (Gemini)
 
-A modern, user-friendly voice bot that responds to personal questions using Google's Gemini AI. Features speech-to-text, text-to-speech, and a beautiful web interface with a personalized AI persona.
+Web app that answers questions with Google Gemini: speech-to-text, text input, text-to-speech, and a configurable system prompt in `server.js`.
 
-## ✨ Features
+## Features
 
-- 🎤 **Voice Recognition**: Speak your questions naturally
-- 🔊 **Text-to-Speech**: Hear responses spoken back to you
-- 💬 **Text Input**: Type questions if you prefer
-- 🎨 **Modern UI**: Beautiful, responsive design
-- 🤖 **Gemini AI**: Powered by Google's advanced AI model
-- 📱 **Mobile Friendly**: Works on all devices
-- 🎯 **Personalized Responses**: AI trained on specific personality and background
-- 🔄 **Dual API Keys**: Automatic fallback for reliability
-- 🎵 **Voice Controls**: Adjustable speed, pitch, and voice selection
+- Voice input (Web Speech API)
+- Text input
+- Spoken replies (Speech Synthesis API)
+- Responsive layout
+- Two Gemini API keys with automatic fallback
+- Adjustable speech rate, pitch, and voice
 
-## 🛠️ Quick Start
+## Quick start
 
-### Option 1: One-Click Installation (Recommended)
+### Option 1: Install scripts
 
-#### For Windows Users:
+**Windows:** Install [Node.js](https://nodejs.org/), then run `install.bat` and follow the prompts.
 
-1. **Install Node.js** from [https://nodejs.org/](https://nodejs.org/) (if not already installed)
-2. **Double-click** `install.bat` to run the installer
-3. Follow the on-screen instructions
-
-#### For Mac/Linux Users:
-
-1. **Install Node.js** (if not already installed)
-2. **Run the installer**:
-   ```bash
-   chmod +x install.sh
-   ./install.sh
-   ```
-
-### Option 2: Manual Setup
-
-#### 1. Get Your Gemini API Keys
-
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create two API keys for redundancy
-3. Copy the keys for the next step
-
-#### 2. Set Up Environment Variables
-
-Create a `.env` file in the root directory:
+**macOS / Linux:**
 
 ```bash
-GEMINI_API_KEY1=your_first_gemini_api_key_here
-GEMINI_API_KEY2=your_second_gemini_api_key_here
+chmod +x install.sh
+./install.sh
 ```
 
-#### 3. Install Dependencies
+### Option 2: Manual setup
+
+1. Create API keys in [Google AI Studio](https://makersuite.google.com/app/apikey) (two keys optional but recommended for fallback).
+
+2. Add a `.env` file in the project root:
+
+```bash
+GEMINI_API_KEY1=your_first_key
+GEMINI_API_KEY2=your_second_key
+```
+
+3. Install dependencies:
 
 ```bash
 npm install
 ```
 
-#### 4. Run the Application
+4. Run the server:
 
 ```bash
-# Development mode (with auto-restart)
-npm run dev
-
-# Production mode
-npm start
+npm run dev   # nodemon
+npm start     # production
 ```
 
-Visit `http://localhost:3000` to use your voice bot!
+Open `http://localhost:3000`.
 
-### 📖 Detailed Setup Guide
+More detail: [SETUP.md](SETUP.md).
 
-For comprehensive setup instructions and troubleshooting, see [SETUP.md](SETUP.md).
-
-## 🛠️ Development
-
-Run in development mode with auto-restart:
+## Development
 
 ```bash
 npm run dev
 ```
 
-## 🚀 Deployment
+## Deployment
 
-### Deploy to Vercel (Recommended)
+**Vercel**
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel --prod`
-3. Follow the prompts
-4. Add your `GEMINI_API_KEY1` and `GEMINI_API_KEY2` in Vercel dashboard under Environment Variables
+1. `npm i -g vercel` then `vercel --prod`, or connect the GitHub repo in the Vercel dashboard.
+2. Set `GEMINI_API_KEY1` and `GEMINI_API_KEY2` under Project → Settings → Environment Variables.
 
-### Deploy to Other Platforms
+**Other hosts:** Set the same variables in Heroku config vars, Railway, Render, or your provider’s env UI.
 
-The app can be deployed to:
+## Customization
 
-- **Heroku**: Add `GEMINI_API_KEY1` and `GEMINI_API_KEY2` to config vars
-- **Railway**: Add environment variables in dashboard
-- **Render**: Set environment variables in service settings
+- **Persona:** Edit `SYSTEM_PROMPT` in `server.js`.
+- **Model:** Default is `gemini-flash-lite-latest`. Override with `GEMINI_MODEL` in `.env`.
+- **Styling:** `public/style.css`.
 
-## 🎯 Customization
+## Browser notes
 
-### Personality Prompts
+Speech recognition works best in recent Chrome or Edge; microphone access requires HTTPS in production.
 
-Edit the `SYSTEM_PROMPT` in `server.js` to customize how the bot responds:
+## Troubleshooting
 
-```javascript
-const SYSTEM_PROMPT = `You are [your name], [your background]. Respond casually like chatting with a friend, 2-3 sentences max.`
-```
+- **Mic / voice:** HTTPS, browser permissions, supported browser.
+- **API errors:** Confirm keys, project billing/quota, and Generative Language API access. The server tries the second key if the first request fails.
 
-### Voice Settings
+## Tech stack
 
-The voice bot includes adjustable settings:
-
-- **Speed**: Control how fast the AI speaks (0.5 - 2.0)
-- **Pitch**: Adjust the voice pitch (0.5 - 2.0)
-- **Voice Selection**: Choose from available system voices
-
-### Styling
-
-Customize the appearance by editing `public/style.css`.
-
-## 🌐 Browser Compatibility
-
-- **Voice Recognition**: Chrome, Edge, Safari (recent versions)
-- **Text-to-Speech**: All modern browsers
-- **Text Input**: Universal support
-
-## 🔧 Troubleshooting
-
-### Voice Recognition Not Working
-
-- Ensure you're using HTTPS (required for microphone access)
-- Check browser permissions for microphone
-- Use Chrome or Edge for best compatibility
-
-### API Errors
-
-- Verify your Gemini API keys are correct
-- Check that your API keys have proper permissions
-- Ensure you haven't exceeded API quotas
-- The system will automatically try the second API key if the first one fails
-
-## 🏗️ Tech Stack
-
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Node.js, Express
-- **AI**: Google Gemini API (`gemini-flash-lite-latest` by default; override with `GEMINI_MODEL` in `.env`)
-- **Speech**: Web Speech API, Speech Synthesis API
-- **Deployment**: Vercel (recommended)
+- HTML, CSS, JavaScript (`public/`)
+- Node.js, Express (`server.js`)
+- `@google/generative-ai`
+- Web Speech API and Speech Synthesis API
 
 ## License
 
-MIT License - feel free to use this for your projects!
+MIT
 
-## 📋 Project Structure
+## Project layout
 
 ```
 VoiceBot-main/
 ├── public/
-│   ├── index.html      # Main UI
-│   ├── style.css       # Styling
-│   └── script.js       # Frontend logic
-├── server.js           # Backend API
-├── package.json        # Dependencies
-├── vercel.json         # Deployment config
-├── install.bat         # Windows installer
-├── install.sh          # Unix/Linux/Mac installer
-├── SETUP.md           # Detailed setup guide
-└── README.md          # Documentation
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── server.js
+├── package.json
+├── vercel.json
+├── install.bat
+├── install.sh
+├── SETUP.md
+└── README.md
 ```
 
-## 🤝 Contributing
+## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Fork the repository, create a branch, commit changes, push, and open a pull request.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Google Gemini AI for the powerful language model
-- Web Speech API for voice recognition and synthesis
-- Vercel for seamless deployment
+Google Gemini API; Web Speech API; hosting options including Vercel.
 
 ## Live demo
 
-**[Open the deployed Voice Bot](https://voice-bot-main-2trfuh762-anewdevls-projects.vercel.app)** (HTTPS on Vercel).
+[Deployed app](https://voice-bot-main-2trfuh762-anewdevls-projects.vercel.app) (HTTPS).
 
-The demo needs valid **`GEMINI_API_KEY1`** / **`GEMINI_API_KEY2`** on that Vercel project, active Google API access, and available quota. Voice input needs a browser that supports the Web Speech API (Chrome or Edge work well) and microphone permission.
+The deployment must define `GEMINI_API_KEY1` and `GEMINI_API_KEY2` in Vercel, and the Google project must have API access and quota. Voice input needs a compatible browser and microphone permission.
