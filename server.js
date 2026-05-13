@@ -18,7 +18,9 @@ app.use(express.static("public"))
 const gemini1 = new GoogleGenerativeAI(process.env.GEMINI_API_KEY1)
 const gemini2 = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2)
 
-const GEMINI_MODEL = "gemini-flash-lite-latest"
+// Newer models / "-latest" aliases are on the v1beta API. Old @google/generative-ai (0.2.x) used v1 → 404.
+const GEMINI_MODEL =
+  process.env.GEMINI_MODEL || "gemini-flash-lite-latest"
 
 const chatRateLimit = rateLimit({
   windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
@@ -97,15 +99,12 @@ app.post("/api/chat", chatRateLimit, async (req, res) => {
       } catch (gemini2Error) {
         console.log("❌ Both Gemini APIs failed")
 
-        // Both failed - return nice error message
+        console.error("Gemini 1:", gemini1Error.message)
+        console.error("Gemini 2:", gemini2Error.message)
         return res.status(503).json({
           error:
             "I'm having some technical difficulties right now. Please try again in a moment! 🤖",
-          details: {
-            gemini1Error: gemini1Error.message,
-            gemini2Error: gemini2Error.message,
-            timestamp: new Date().toISOString(),
-          },
+          timestamp: new Date().toISOString(),
         })
       }
     }
